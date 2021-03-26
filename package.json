@@ -1,0 +1,13 @@
+{
+    "name": "dinosaurs",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build": "node asconfig.js",
+        "test": "asp --nologo"
+    },
+    "dependencies": {
+        "assemblyscript": "^0.9.4",
+        "near-sdk-as": "^0.3.1"
+    }
+}
