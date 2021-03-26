@@ -130,8 +130,7 @@ function removeDinosaurFromOwner(owner: string, id: string): void {
             break
         }
     }
-    let newList = new DinosaurList(dinoIds)
-    dinosaursByOwner.set(owner, newList)
+    dinosaursByOwner.set(owner, new DinosaurList(dinoIds))
 }
 
 /**
