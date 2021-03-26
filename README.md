@@ -2,7 +2,7 @@
 
 # Dinosaurs
 
-## Yarn
+## Set Up
 
 `yarn` : installs all the relevant node modules \
 `yarn build` : creates the out/main.wasm file \
