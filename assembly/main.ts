@@ -8,7 +8,8 @@ import {
     getAllPokemonIds,
     getPokemonIdsForOwner,
     randomPokemonType,
-    removePokemonFromOwner
+    removePokemonFromOwner,
+    pokemonById
 } from './helpers'
 
 /*******************/
@@ -31,7 +32,7 @@ export function createPokemon(nickname: string): SerializedPokemon {
  * @param id
  */
 export function deletePokemon(id: string): void {
-    const pokemon = getPokemonById(id)
+    const pokemon = pokemonById(id)
     assert(
         pokemon.owner == context.sender,
         'This pokemon does not belong to ' + context.sender
@@ -47,7 +48,7 @@ export function deletePokemon(id: string): void {
  * @param id
  */
 export function transferPokemon(newOwner: string, id: string): void {
-    const pokemon = getPokemonById(id)
+    const pokemon = pokemonById(id)
     assert(
         pokemon.owner == context.sender,
         'This pokemon does not belong to ' + context.sender
@@ -62,7 +63,7 @@ export function transferPokemon(newOwner: string, id: string): void {
  * @param id
  */
 export function healPokemon(id: string): void {
-    const pokemon = getPokemonById(id)
+    const pokemon = pokemonById(id)
     assert(
         pokemon.owner == context.sender,
         'This pokemon does not belong to ' + context.sender
@@ -70,6 +71,11 @@ export function healPokemon(id: string): void {
     pokemon.heal()
     pokemonMap.set(base64.decode(pokemon.id), pokemon)
 }
+
+/**
+ *
+ */
+export function trainPokemon(id: string) {}
 
 /*****************/
 /* VIEW METHODS */
@@ -80,7 +86,7 @@ export function healPokemon(id: string): void {
  * @param owner
  * @returns
  */
-export function getPokemonForOwner(owner: string): SerializedPokemon[] {
+export function getPokemonByOwner(owner: string): SerializedPokemon[] {
     const pokemonIds = getPokemonIdsForOwner(owner)
     let pokemonList = new Array<SerializedPokemon>()
     for (let i = 0; i < pokemonIds.length; i++) {
@@ -97,9 +103,8 @@ export function getPokemonForOwner(owner: string): SerializedPokemon[] {
  * @param id
  * @returns
  */
-export function getPokemonById(id: string): Pokemon {
-    const dna = base64.decode(id)
-    return pokemonMap.getSome(dna)
+export function getPokemonById(id: string): SerializedPokemon {
+    return pokemonMap.getSome(base64.decode(id)).serialized
 }
 
 /**
@@ -111,7 +116,7 @@ export function getAllPokemon(): SerializedPokemon[] {
     const numberOfPokemon = allPokemonIds.length
     const result = new Array<SerializedPokemon>(numberOfPokemon)
     for (let i = 0; i < numberOfPokemon; i++) {
-        result[i] = getPokemonById(allPokemonIds[i]).serialized
+        result[i] = pokemonById(allPokemonIds[i]).serialized
     }
     return result
 }

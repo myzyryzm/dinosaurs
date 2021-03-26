@@ -136,3 +136,12 @@ export function randomPokemonType(): string {
     }
     return pokemonTypes[randomIndex]
 }
+
+/**
+ * Gets a pokemon by a specified id.
+ * @param id
+ * @returns
+ */
+export function pokemonById(id: string): Pokemon {
+    return pokemonMap.getSome(base64.decode(id))
+}

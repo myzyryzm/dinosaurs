@@ -2,17 +2,17 @@
 
 import {
     createPokemon,
-    getPokemonForOwner,
-    getPokemonById,
+    getPokemonByOwner,
     getAllPokemon,
     deletePokemon,
-    transferPokemon
+    transferPokemon,
+    getPokemonById
 } from '../main'
 
 describe('Get Pokemon', () => {
     it('Should return an array of 1 pokemon', () => {
         const pokemon = createPokemon('reptar')
-        expect(getPokemonForOwner(pokemon.owner).length).toBe(
+        expect(getPokemonByOwner(pokemon.owner).length).toBe(
             1,
             'Should return an array of the pokemon created above.'
         )
@@ -55,17 +55,17 @@ describe('Transfer pokemon', () => {
     it('Should return no pokemon after deleting the pokemon', () => {
         const pokemon = createPokemon('reptar')
         const originalOwner = pokemon.owner
-        expect(getPokemonForOwner(originalOwner).length).toBe(
+        expect(getPokemonByOwner(originalOwner).length).toBe(
             1,
             'Should return the pokemon just create.'
         )
         const newOwner = 'git'
         transferPokemon(newOwner, pokemon.id)
-        expect(getPokemonForOwner(originalOwner).length).toBe(
+        expect(getPokemonByOwner(originalOwner).length).toBe(
             0,
             'Should return no pokemon for the original owner because the pokemon has been transferred.'
         )
-        expect(getPokemonForOwner(newOwner).length).toBe(
+        expect(getPokemonByOwner(newOwner).length).toBe(
             1,
             'Should return the single pokemon for the new owner.'
         )
