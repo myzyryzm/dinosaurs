@@ -10,13 +10,13 @@
 
 ## NEAR
 
-`near dev-deploy out/main.wasm` : deploys the contract \
+`near dev-deploy out/main.wasm` : deploys the contract
 
 ### View Methods
 
 `near view $ACCOUNT_ID getAllDinosaurs` : returns a list of all dinosaurs\
 `near view $ACCOUNT_ID getDinosaurById '{"id": $DINOSAUR_ID}'` : gets a dinosaur by id\
-`near view $ACCOUNT_ID getDinosaursForOwner '{"owner": $OWNER_NAME}'` : gets all dinosaurs for a specific account\
+`near view $ACCOUNT_ID getDinosaursForOwner '{"owner": $OWNER_NAME}'` : gets all dinosaurs for a specific account
 
 ### Change Methods
 
