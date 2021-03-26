@@ -4,6 +4,8 @@ import { PokemonValue } from './models'
 
 export const maxLevel = 100
 export const maxBaseValue = 32
+// chance the cpu will attack in any given turn (percentage)
+export const cpuAggression = 50
 export const pokemonTypes = ['bulbasaur', 'charmander', 'squirtle']
 
 const bulbasaurValues = new PokemonValue(

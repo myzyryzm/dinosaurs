@@ -145,3 +145,20 @@ export function randomPokemonType(): string {
 export function pokemonById(id: string): Pokemon {
     return pokemonMap.getSome(base64.decode(id))
 }
+
+/**
+ * Calculates the damage for a given interaction
+ * @param level
+ * @param basePower
+ * @param attack
+ * @param defense
+ * @returns
+ */
+export function calculateDamage(
+    level: i32,
+    basePower: i32,
+    attack: i32,
+    defense: i32
+): i32 {
+    return (((2 * level) / 5 + 2) * basePower * attack) / defense / 50 + 2
+}

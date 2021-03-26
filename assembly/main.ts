@@ -9,8 +9,11 @@ import {
     getPokemonIdsForOwner,
     randomPokemonType,
     removePokemonFromOwner,
-    pokemonById
+    pokemonById,
+    calculateDamage,
+    randomNumber
 } from './helpers'
+import { cpuAggression } from './constants'
 
 /*******************/
 /* CHANGE METHODS */
@@ -73,9 +76,77 @@ export function healPokemon(id: string): void {
 }
 
 /**
- *
+ * Trains a pokemon with specified id against a cpu
  */
-export function trainPokemon(id: string) {}
+export function trainPokemon(id: string): string {
+    const pokemon = pokemonById(id)
+    assert(
+        pokemon.owner == context.sender,
+        'This pokemon does not belong to ' + context.sender
+    )
+    if (pokemon.currentHealth == 0) {
+        return 'Cannot fight with a fainted pokemon!'
+    }
+    const serializedPokemon = pokemon.serialized
+    const basePower = 40
+    const cpu = new Pokemon('cpu', '', randomPokemonType(), 4)
+    const serializedCpu = cpu.serialized
+    let isOver = false
+    const userFaster = serializedPokemon.speed >= serializedCpu.speed
+    let userWon = false
+    while (!isOver) {
+        const userToCpuDmg = calculateDamage(
+            serializedPokemon.level,
+            basePower,
+            serializedPokemon.attack,
+            serializedCpu.defense
+        )
+        // damage done to user's pokemon by cpu
+        const rand = randomNumber()
+        const cpuToUserDmg = calculateDamage(
+            serializedCpu.level,
+            rand < cpuAggression ? basePower : 0,
+            serializedCpu.attack,
+            serializedPokemon.defense
+        )
+        if (userFaster) {
+            cpu.currentHealth -= userToCpuDmg
+            if (cpu.currentHealth <= 0) {
+                isOver = true
+                userWon = true
+                break
+            } else {
+                pokemon.currentHealth -= cpuToUserDmg
+                if (pokemon.currentHealth <= 0) {
+                    pokemon.currentHealth = 0
+                    isOver = true
+                    break
+                }
+            }
+        } else {
+            pokemon.currentHealth -= cpuToUserDmg
+            if (pokemon.currentHealth <= 0) {
+                pokemon.currentHealth = 0
+                isOver = true
+                break
+            } else {
+                cpu.currentHealth -= userToCpuDmg
+                if (cpu.currentHealth <= 0) {
+                    isOver = true
+                    userWon = true
+                    break
+                }
+            }
+        }
+    }
+    if (userWon) {
+        pokemon.gainExperience(cpu.experienceGained)
+    }
+    pokemonMap.set(base64.decode(pokemon.id), pokemon)
+    return userWon
+        ? 'User won with ' + pokemon.currentHealth.toString() + ' HP left!'
+        : 'User lost with ' + cpu.currentHealth.toString() + ' HP left for CPU!'
+}
 
 /*****************/
 /* VIEW METHODS */

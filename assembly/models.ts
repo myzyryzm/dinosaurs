@@ -16,13 +16,15 @@ export class Pokemon {
     baseAttack: i32
     baseDefense: i32
     baseSpeed: i32
-    level: i32 = 5
     currentHealth: i32
+    experience: i32 = 125
+    baseExperienceYield: i32 = 64
 
     constructor(
         public id: string,
         public nickname: string,
-        public type: string
+        public type: string,
+        public level: i32 = 5
     ) {
         this.owner = context.sender
         this.baseHealth = randomBaseValue()
@@ -40,8 +42,52 @@ export class Pokemon {
         return new SerializedPokemon(this)
     }
 
+    get experienceGained(): i32 {
+        return (this.level * this.baseExperienceYield) / 7
+    }
+
+    get pokemonValue(): PokemonValue {
+        const numValues = pokemonValues.length
+        for (let i = 0; i < numValues; i++) {
+            const value = pokemonValues[i]
+            if (value.type == this.type) {
+                return value
+            }
+        }
+        return pokemonValues[0]
+    }
+
     public heal(): void {
         this.currentHealth = this.serialized.health
+    }
+
+    public gainExperience(experience: i32): void {
+        if (this.level < maxLevel) {
+            this.experience += experience
+            const nextLevel = this.level + 1
+            if (this.experience >= nextLevel * nextLevel * nextLevel) {
+                const value = this.pokemonValue
+                const healthRange = value.healthRange
+                const healthDiff = healthRange[1] - healthRange[0]
+                const currentMaxHealth =
+                    (((healthDiff * this.baseHealth) / maxBaseValue +
+                        healthRange[0]) *
+                        this.level) /
+                    maxLevel
+                this.level += 1
+                const newMaxHealth =
+                    (((healthDiff * this.baseHealth) / maxBaseValue +
+                        healthRange[0]) *
+                        this.level) /
+                    maxLevel
+                const extraHealth = newMaxHealth - currentMaxHealth
+                this.currentHealth += extraHealth
+                this.currentHealth =
+                    this.currentHealth < newMaxHealth
+                        ? this.currentHealth
+                        : newMaxHealth
+            }
+        }
     }
 }
 
@@ -62,6 +108,7 @@ export class SerializedPokemon {
     baseSpeed: i32
     level: i32
     currentHealth: i32
+    experience: i32
 
     constructor(pokemon: Pokemon) {
         this.owner = pokemon.owner
@@ -75,45 +122,39 @@ export class SerializedPokemon {
         this.baseDefense = pokemon.baseDefense
         this.baseSpeed = pokemon.baseSpeed
         this.currentHealth = pokemon.currentHealth
-        const numValues = pokemonValues.length
-        for (let i = 0; i < numValues; i++) {
-            const value = pokemonValues[i]
-            if (value.type == this.type) {
-                const healthRange = value.healthRange
-                const healthDiff = healthRange[1] - healthRange[0]
-                this.health =
-                    (((healthDiff * pokemon.baseHealth) / maxBaseValue +
-                        healthRange[0]) *
-                        this.level) /
-                    maxLevel
+        this.experience = pokemon.experience
 
-                const attackRange = value.attackRange
-                const attackDiff = attackRange[1] - attackRange[0]
-                this.attack =
-                    (((attackDiff * pokemon.baseAttack) / maxBaseValue +
-                        attackRange[0]) *
-                        this.level) /
-                    maxLevel
+        const value = pokemon.pokemonValue
+        const healthRange = value.healthRange
+        const healthDiff = healthRange[1] - healthRange[0]
+        this.health =
+            (((healthDiff * pokemon.baseHealth) / maxBaseValue +
+                healthRange[0]) *
+                this.level) /
+            maxLevel
 
-                const defenseRange = value.defenseRange
-                const defenseDiff = defenseRange[1] - defenseRange[0]
-                this.defense =
-                    (((defenseDiff * pokemon.baseDefense) / maxBaseValue +
-                        defenseRange[0]) *
-                        this.level) /
-                    maxLevel
+        const attackRange = value.attackRange
+        const attackDiff = attackRange[1] - attackRange[0]
+        this.attack =
+            (((attackDiff * pokemon.baseAttack) / maxBaseValue +
+                attackRange[0]) *
+                this.level) /
+            maxLevel
 
-                const speedRange = value.speedRange
-                const speedDiff = speedRange[1] - speedRange[0]
-                this.speed =
-                    (((speedDiff * pokemon.baseSpeed) / maxBaseValue +
-                        speedRange[0]) *
-                        this.level) /
-                    maxLevel
+        const defenseRange = value.defenseRange
+        const defenseDiff = defenseRange[1] - defenseRange[0]
+        this.defense =
+            (((defenseDiff * pokemon.baseDefense) / maxBaseValue +
+                defenseRange[0]) *
+                this.level) /
+            maxLevel
 
-                break
-            }
-        }
+        const speedRange = value.speedRange
+        const speedDiff = speedRange[1] - speedRange[0]
+        this.speed =
+            (((speedDiff * pokemon.baseSpeed) / maxBaseValue + speedRange[0]) *
+                this.level) /
+            maxLevel
     }
 }
 
