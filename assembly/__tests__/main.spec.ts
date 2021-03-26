@@ -1,84 +1,73 @@
 /** @format */
 
 import {
-    createDinosaur,
-    getDinosaursForOwner,
-    getDinosaurById,
-    getAllDinosaurs,
-    deleteDinosaur,
-    transferDinosaur,
+    createPokemon,
+    getPokemonForOwner,
+    getPokemonById,
+    getAllPokemon,
+    deletePokemon,
+    transferPokemon
 } from '../main'
-import { MAX_DINOS } from '../constants'
 
-describe('Get Dinosaurs', () => {
-    it('Should return an array of 1 dinosaur', () => {
-        const dino = createDinosaur('reptar')
-        expect(getDinosaursForOwner(dino.owner).length).toBe(
+describe('Get Pokemon', () => {
+    it('Should return an array of 1 pokemon', () => {
+        const pokemon = createPokemon('reptar')
+        expect(getPokemonForOwner(pokemon.owner).length).toBe(
             1,
-            'Should return an array of the dinosaur created above.'
+            'Should return an array of the pokemon created above.'
         )
     })
 
-    it('Should return a single dinosaur', () => {
-        const dino = createDinosaur('reptar')
-        expect(getDinosaurById(dino.id).id).toBe(
-            dino.id,
-            'Should return the same dinosaur that was created'
+    it('Should return a single pokemon', () => {
+        const pokemon = createPokemon('reptar')
+        expect(getPokemonById(pokemon.id).id).toBe(
+            pokemon.id,
+            'Should return the same pokemon that was created'
         )
     })
 
-    it('Should return all the dinosaurs', () => {
-        createDinosaur('reptar')
-        createDinosaur('dr. zhivago')
-        expect(getAllDinosaurs().length).toBe(
+    it('Should return all the pokemon', () => {
+        createPokemon('reptar')
+        createPokemon('dr. zhivago')
+        expect(getAllPokemon().length).toBe(
             2,
-            'Should return the same dinosaur that was created'
-        )
-    })
-
-    it('Should return up to ' + MAX_DINOS.toString() + ' dinosaurs', () => {
-        for (let i = 0; i < MAX_DINOS + 2; i++) {
-            createDinosaur(i.toString())
-        }
-        expect(getAllDinosaurs().length).toBe(
-            MAX_DINOS,
-            'Should return the same dinosaur that was created'
+            'Should return the same pokemon that was created'
         )
     })
 })
 
-describe('Delete dinosaur', () => {
-    it('Should return no dinosaurs after deleting the dinosaur', () => {
-        const dino = createDinosaur('reptar')
-        expect(getAllDinosaurs().length).toBe(
+describe('Delete pokemon', () => {
+    it('Should return no pokemon after deleting the pokemon', () => {
+        const pokemon = createPokemon('reptar')
+        expect(getAllPokemon().length).toBe(
             1,
-            'Should return the same dinosaur that was created'
+            'Should return the same pokemon that was created'
         )
-        deleteDinosaur(dino.id)
-        expect(getAllDinosaurs().length).toBe(
+        deletePokemon(pokemon.id)
+        expect(getAllPokemon().length).toBe(
             0,
-            'Should return no dinosaurs after deletion'
+            'Should return no pokemon after deletion'
         )
     })
 })
 
-describe('Transfer dinosaur', () => {
-    it('Should return no dinosaurs after deleting the dinosaur', () => {
-        const dino = createDinosaur('reptar')
-        const originalOwner = dino.owner
-        expect(getDinosaursForOwner(originalOwner).length).toBe(
+describe('Transfer pokemon', () => {
+    it('Should return no pokemon after deleting the pokemon', () => {
+        const pokemon = createPokemon('reptar')
+        const originalOwner = pokemon.owner
+        expect(getPokemonForOwner(originalOwner).length).toBe(
             1,
-            'Should return the dinosaur just create.'
+            'Should return the pokemon just create.'
         )
         const newOwner = 'git'
-        transferDinosaur(newOwner, dino.id)
-        expect(getDinosaursForOwner(originalOwner).length).toBe(
+        transferPokemon(newOwner, pokemon.id)
+        expect(getPokemonForOwner(originalOwner).length).toBe(
             0,
-            'Should return no dinosaurs for the original owner because the dinosaur has been transferred.'
+            'Should return no pokemon for the original owner because the pokemon has been transferred.'
         )
-        expect(getDinosaursForOwner(newOwner).length).toBe(
+        expect(getPokemonForOwner(newOwner).length).toBe(
             1,
-            'Should return the single dinosaur for the new owner.'
+            'Should return the single pokemon for the new owner.'
         )
     })
 })

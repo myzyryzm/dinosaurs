@@ -1,5 +1,5 @@
 {
-    "name": "dinosaurs",
+    "name": "blockemon",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -7,6 +7,7 @@
         "test": "asp --nologo"
     },
     "dependencies": {
+        "@types/node": "^14.14.36",
         "assemblyscript": "^0.9.4",
         "near-sdk-as": "^0.3.1"
     }
