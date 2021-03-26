@@ -76,9 +76,11 @@ export function healPokemon(id: string): void {
 }
 
 /**
- * Trains a pokemon with specified id against a cpu
+ * Trains a pokemon with specified id against a cpu at specified cpuLevel
+ * @param id
+ * @param cpuLevel
  */
-export function trainPokemon(id: string): string {
+export function trainPokemon(id: string, cpuLevel: i32): string {
     const pokemon = pokemonById(id)
     assert(
         pokemon.owner == context.sender,
@@ -89,7 +91,7 @@ export function trainPokemon(id: string): string {
     }
     const serializedPokemon = pokemon.serialized
     const basePower = 40
-    const cpu = new Pokemon('cpu', '', randomPokemonType(), 4)
+    const cpu = new Pokemon('cpu', '', randomPokemonType(), cpuLevel)
     const serializedCpu = cpu.serialized
     let isOver = false
     const userFaster = serializedPokemon.speed >= serializedCpu.speed
