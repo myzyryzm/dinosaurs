@@ -10,4 +10,5 @@
 
 ## NEAR
 
-`near dev-deploy out/main.wasm` : deploys the contract
+`near dev-deploy out/main.wasm` : deploys the contract \
+`near view $ACCOUNT_ID getAllDinosaurs` : returns a list of all dinosaurs

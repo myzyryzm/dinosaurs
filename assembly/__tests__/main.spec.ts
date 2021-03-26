@@ -1,12 +1,12 @@
 /** @format */
 
-import { storage, Context, u128 } from 'near-sdk-as'
 import {
     createDinosaur,
     getDinosaursForOwner,
     getDinosaurById,
     getAllDinosaurs,
     deleteDinosaur,
+    transferDinosaur,
 } from '../main'
 import { MAX_DINOS } from '../constants'
 
@@ -58,6 +58,27 @@ describe('Delete dinosaur', () => {
         expect(getAllDinosaurs().length).toBe(
             0,
             'Should return no dinosaurs after deletion'
+        )
+    })
+})
+
+describe('Transfer dinosaur', () => {
+    it('Should return no dinosaurs after deleting the dinosaur', () => {
+        const dino = createDinosaur('reptar')
+        const originalOwner = dino.owner
+        expect(getDinosaursForOwner(originalOwner).length).toBe(
+            1,
+            'Should return the dinosaur just create.'
+        )
+        const newOwner = 'git'
+        transferDinosaur(newOwner, dino.id)
+        expect(getDinosaursForOwner(originalOwner).length).toBe(
+            0,
+            'Should return no dinosaurs for the original owner because the dinosaur has been transferred.'
+        )
+        expect(getDinosaursForOwner(newOwner).length).toBe(
+            1,
+            'Should return the single dinosaur for the new owner.'
         )
     })
 })
